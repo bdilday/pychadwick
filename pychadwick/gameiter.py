@@ -1,6 +1,6 @@
 import ctypes
 from ctypes import Structure, POINTER, c_char, c_char_p, c_int
-from .game import CWGame, CWEvent 
+from .game import CWGame, CWEvent
 from .parse import CWEventData
 
 
@@ -57,4 +57,3 @@ CWGameIterator._fields_ = [
     ("parse_ok", c_int),
     ("state", POINTER(CWGameState)),
 ]
-

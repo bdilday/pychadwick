@@ -24,4 +24,3 @@ CWScorebookIterator._fields_ = [
     ("current", POINTER(CWGame)),
     ("f", POINTER(CFUNCTYPE(c_int, POINTER(CWGame)))),
 ]
-

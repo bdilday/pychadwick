@@ -20,5 +20,5 @@ CWEventFieldStruct._fields_ = [
         ),
     ),
     ("header", c_char_p),
-    ("description", c_char_p)
+    ("description", c_char_p),
 ]
