@@ -9,6 +9,8 @@ from ctypes import (
     create_string_buffer,
 )
 
+import pandas as pd
+
 from .game import CWGame
 from .gameiter import CWGameIterator
 from .roster import CWRoster
@@ -146,3 +148,6 @@ class Chadwick:
         func.restype = POINTER(CWGameIterator)
         func.argtypes = (POINTER(CWGame),)
         return func(game_ptr)
+
+    def game_to_dataframe(self, game_ptr):
+        return pd.DataFrame(list(self.process_game(game_ptr)), dtype='f8')
