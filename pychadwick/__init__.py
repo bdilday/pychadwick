@@ -53,7 +53,7 @@ EVENT_DATA_TYPES = {
     "BATTEDBALL_CD": str,
     "BUNT_FL": str,
     "FOUL_FL": str,
-    "BATTEDBALL_LOC_TX": nullable_int,
+    "BATTEDBALL_LOC_TX": str,
     "ERR_CT": nullable_int,
     "ERR1_FLD_CD": nullable_int,
     "ERR1_CD": str,
