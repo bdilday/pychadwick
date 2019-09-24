@@ -198,3 +198,9 @@ class Chadwick:
             data_type_mapping,
         )
 
+    def register_function(self, func_name, func_arg_types, func_res_type):
+        func = self.libchadwick.__getattr__(func_name)
+        func.argtypes = func_arg_types
+        func.restype = func_res_type
+        self.__dict__[func_name] = func
+        return func
