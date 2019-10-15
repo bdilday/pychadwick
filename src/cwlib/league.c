@@ -80,6 +80,9 @@ cw_league_roster_find(CWLeague *league, char *team)
   return roster;
 }
 
+/* reads league from a file. the league pointer must be initialized with a call
+   to cw_league_create first. 
+*/
 int cw_league_read_file(CWLeague *league, char *filename) {
   FILE *file; 
   
@@ -88,7 +91,6 @@ int cw_league_read_file(CWLeague *league, char *filename) {
   if (!file) {
     printf("Cannot open file %s\n", filename);
   }
-  league = cw_league_create();
   return cw_league_read(league, file);
 }
 
