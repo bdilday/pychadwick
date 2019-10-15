@@ -27,6 +27,14 @@ class Chadwick:
         self._dll = None
         self.library_path = library_path
         self._load_shared_library(library_path)
+        self.set_all_headers()
+
+    def set_all_headers(self):
+        [self.set_event_field(field) for field in self.all_headers]
+
+    @property
+    def all_headers(self):
+        return self.cwevent_headers + self.cwevent_ext_headers
 
     @property
     def cwevent_headers(self):
@@ -70,7 +78,9 @@ class Chadwick:
             idx = self.cwevent_ext_headers.index(field_name)
             self.cwevent_ext_fields[idx] = value
         else:
-            logging.warn(f"field_name {field_name} is not in the headers. value NOT set")
+            logging.warn(
+                f"field_name {field_name} is not in the headers. value NOT set"
+            )
 
     @property
     def libchadwick(self):
@@ -120,9 +130,7 @@ class Chadwick:
     @property
     def active_headers(self):
         return [
-            h
-            for i, h in enumerate(self.cwevent_headers)
-            if self.cwevent_fields[i] == 1
+            h for i, h in enumerate(self.cwevent_headers) if self.cwevent_fields[i] == 1
         ] + [
             h
             for i, h in enumerate(self.cwevent_ext_headers)
@@ -186,7 +194,7 @@ class Chadwick:
                     )
                 except TypeError:
                     print(f"Cannot convert column {column_name}")
-                    print(df.loc[: column_name])
+                    print(df.loc[:column_name])
                     raise TypeError
         return df
 
