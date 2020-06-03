@@ -5,6 +5,7 @@ from ctypes import Structure, POINTER, c_char, c_char_p, c_int
 class CWBoxBatting(Structure):
     pass
 
+
 class CWBoxFielding(Structure):
     pass
 
@@ -19,8 +20,6 @@ class CWBoxPitching(Structure):
 
 class CWBoxPitcher(Structure):
     pass
-
-
 
 
 class CWBoxEvent(Structure):
@@ -185,4 +184,3 @@ CWBoxscore._fields_ = [
     ("dp_list", "POINTER(CWBoxEvent"),
     ("tp_list", "POINTER(CWBoxEvent"),
 ]
-

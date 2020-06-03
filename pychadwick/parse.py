@@ -104,4 +104,3 @@ CWEventData._fields_ = [
     ("batted_ball_type", c_char),
     ("hit_location", c_char * 20),
 ]
-

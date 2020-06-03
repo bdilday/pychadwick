@@ -100,4 +100,3 @@ CWGame._fields_ = [
     ("prev", POINTER(CWGame)),
     ("next", POINTER(CWGame)),
 ]
-
