@@ -1,29 +1,46 @@
 import ctypes
-from ctypes import Structure, POINTER, c_char, c_char_p, c_int, pointer, create_string_buffer
+from ctypes import (
+    Structure,
+    POINTER,
+    c_char,
+    c_char_p,
+    c_int,
+    c_void_p,
+    pointer,
+    create_string_buffer,
+)
 
-from game import CWGame
-from gameiter import CWGameIterator
-from roster import CWRoster
-from league import CWLeague
+from pychadwick.game import CWGame
+from pychadwick.gameiter import CWGameIterator
+from pychadwick.roster import CWRoster
+from pychadwick.league import CWLeague
+
 
 def read_rosters():
-    dll = ctypes.cdll.LoadLibrary("/home/bdilday/tmp/chadwick/src/cwtools/.libs/libchadwick2.so")                                                   
-    filename = b"/home/bdilday/github/chadwickbureau/retrosheet/event/regular/TEAM1961"                                                             
+    dll = ctypes.cdll.LoadLibrary("/home/bdilday/github/pychadwick/build/libcwevent.so")
+    filename = b"/home/bdilday/github/chadwickbureau/retrosheet/event/regular/TEAM1961"
     f = dll.cw_league_read_file
-    f.argtypes = (POINTER(CWLeague), c_char_p,)
+    f.argtypes = (POINTER(CWLeague), c_char_p)
     f.restype = c_int
-    first_roster = CWRoster(team_id=create_string_buffer(b"", 4))
+    cw_league_create = dll.cw_league_create
+    cw_league_create.argtypes = tuple()
+    cw_league_create.restype = POINTER(CWLeague)
+
+    league_p = cw_league_create()
+
+    first_roster = CWRoster(team_id=create_string_buffer(b"jjj", 4))
     last_roster = CWRoster(team_id=create_string_buffer(b"", 4))
-    league_p = pointer(CWLeague(first_roster = pointer(first_roster), last_roster=pointer(last_roster)))
-    
+    league_p.first_roster = pointer(first_roster)
+    league_p.last_roster = pointer(last_roster)
+
+#    print(league_p.contents.first_roster.contents.team_id.contents.value)
     p = f(league_p, filename)
+    print(league_p.contents.first_roster.contents.team_id.contents)
     return p, league_p
 
 
 def make_game():
-    dll = ctypes.cdll.LoadLibrary(
-        "/home/bdilday/tmp/chadwick/src/cwtools/.libs/libchadwick2.so"
-    )
+    dll = ctypes.cdll.LoadLibrary("/home/bdilday/github/pychadwick/build/libcwevent.so")
 
     cw_game_create = dll.cw_game_create
     cw_game_create.restype = POINTER(CWGame)
@@ -32,9 +49,11 @@ def make_game():
     gp = cw_game_create(game_id)
     return gp
 
+
 def main():
     p = read_rosters()
     print(p)
+
 
 if __name__ == "__main__":
     main()
