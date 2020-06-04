@@ -78,7 +78,7 @@ class Chadwick:
             idx = self.cwevent_ext_headers.index(field_name)
             self.cwevent_ext_fields[idx] = value
         else:
-            logging.warn(
+            logging.warning(
                 f"field_name {field_name} is not in the headers. value NOT set"
             )
 
@@ -162,11 +162,11 @@ class Chadwick:
         gameiter = self.cw_gameiter_create(game_ptr)
 
         if not roster_visitor:
-            logging.warn("roster for %s is undefined.", "visitor")
+            logging.warning("roster for %s is undefined.", "visitor")
             roster_visitor = pointer(CWRoster())
 
         if not roster_home:
-            logging.warn("roster for %s is undefined.", "home")
+            logging.warning("roster for %s is undefined.", "home")
             roster_home = pointer(CWRoster())
 
         event_str = create_string_buffer(b" ", 4096)
