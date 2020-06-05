@@ -1,17 +1,14 @@
 import ctypes
 from ctypes import (
-    Structure,
     POINTER,
     c_char,
     c_char_p,
     c_int,
-    c_void_p,
     pointer,
     create_string_buffer,
 )
 
 from pychadwick.game import CWGame
-from pychadwick.gameiter import CWGameIterator
 from pychadwick.roster import CWRoster
 from pychadwick.league import CWLeague
 

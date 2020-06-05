@@ -1,4 +1,3 @@
-import ctypes
 from ctypes import Structure, POINTER, c_char, c_int
 
 

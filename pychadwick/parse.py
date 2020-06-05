@@ -1,6 +1,4 @@
-import ctypes
-from ctypes import Structure, POINTER, c_char, c_char_p, c_int
-from ctypes import CFUNCTYPE
+from ctypes import Structure, c_char, c_int
 from enum import IntEnum
 
 
@@ -18,7 +16,11 @@ class CEnum(IntEnum):
 
 CWEventType = c_int
 
-# https://stackoverflow.com/questions/27199479/using-the-python-enum-module-for-ctypes
+"""
+https://stackoverflow.com/questions/27199479/using-the-python-enum-module-for-ctypes
+"""
+
+
 class CWEventType_bogus(CEnum):
     CW_EVENT_UNKNOWN = 0
     CW_EVENT_NONE = 1

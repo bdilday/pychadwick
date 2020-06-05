@@ -1,9 +1,7 @@
 import ctypes
 from ctypes import (
-    Structure,
     POINTER,
     c_char,
-    c_char_p,
     c_int,
     pointer,
     create_string_buffer,
@@ -80,8 +78,6 @@ class Chadwick:
                 f"field_name {field_name} is not in the headers. value NOT set"
             )
 
-
-
     def fopen(self, file_path, mode=b"r"):
         func = self.libchadwick.fopen
         func.argtypes = ctypes.c_char_p, ctypes.c_char_p
@@ -112,11 +108,12 @@ class Chadwick:
         cw_game_read.argtypes = (ctypes.c_void_p,)
         file_handle = self.fopen(file_path)
         while not self.feof(file_handle):
-            try:
-                yield cw_game_read(file_handle)
-            except:
-                self.fclose(file_handle)
-                return
+            yield cw_game_read(file_handle)
+
+            # TODO: why is this here?
+            # except:
+            #     self.fclose(file_handle)
+            #     return
 
     @property
     def active_headers(self):
