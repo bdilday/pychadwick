@@ -1,9 +1,7 @@
 import ctypes
 from ctypes import (
-    Structure,
     POINTER,
     c_char,
-    c_char_p,
     c_int,
     pointer,
     create_string_buffer,
@@ -16,17 +14,15 @@ from .game import CWGame
 from .gameiter import CWGameIterator
 from .roster import CWRoster
 from .utils import CWEventFieldStruct
-from . import EVENT_DATA_TYPES
+from . import EVENT_DATA_TYPES, ChadwickLibrary
 
 
 class Chadwick:
     FIELDS_COUNT = 96
     EXT_FIELDS_COUNT = 63
 
-    def __init__(self, library_path="libchadwick2.so", *args, **kwargs):
-        self._dll = None
-        self.library_path = library_path
-        self._load_shared_library(library_path)
+    def __init__(self, *args, **kwargs):
+        self.libchadwick = ChadwickLibrary.libchadwick
         self.set_all_headers()
 
     def set_all_headers(self):
@@ -78,18 +74,9 @@ class Chadwick:
             idx = self.cwevent_ext_headers.index(field_name)
             self.cwevent_ext_fields[idx] = value
         else:
-            logging.warn(
+            logging.warning(
                 f"field_name {field_name} is not in the headers. value NOT set"
             )
-
-    @property
-    def libchadwick(self):
-        if self._dll is None:
-            self._load_shared_library(self.library_path)
-        return self._dll
-
-    def _load_shared_library(self, library_path):
-        self._dll = ctypes.cdll.LoadLibrary(library_path)
 
     def fopen(self, file_path, mode=b"r"):
         func = self.libchadwick.fopen
@@ -121,11 +108,12 @@ class Chadwick:
         cw_game_read.argtypes = (ctypes.c_void_p,)
         file_handle = self.fopen(file_path)
         while not self.feof(file_handle):
-            try:
-                yield cw_game_read(file_handle)
-            except:
-                self.fclose(file_handle)
-                return
+            yield cw_game_read(file_handle)
+
+            # TODO: why is this here?
+            # except:
+            #     self.fclose(file_handle)
+            #     return
 
     @property
     def active_headers(self):
@@ -162,11 +150,11 @@ class Chadwick:
         gameiter = self.cw_gameiter_create(game_ptr)
 
         if not roster_visitor:
-            logging.warn("roster for %s is undefined.", "visitor")
+            logging.warning("roster for %s is undefined.", "visitor")
             roster_visitor = pointer(CWRoster())
 
         if not roster_home:
-            logging.warn("roster for %s is undefined.", "home")
+            logging.warning("roster for %s is undefined.", "home")
             roster_home = pointer(CWRoster())
 
         event_str = create_string_buffer(b" ", 4096)

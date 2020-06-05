@@ -108,3 +108,5 @@ venv.bak/
 *.so
 
 .idea/
+pychadwicklib/Makefile
+_skbuild/

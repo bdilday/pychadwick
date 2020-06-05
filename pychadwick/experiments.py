@@ -1,9 +1,7 @@
 import ctypes
-from ctypes import Structure, POINTER, c_char, c_char_p, c_int, pointer
+from ctypes import POINTER, c_char
 
 from game import CWGame
-from gameiter import CWGameIterator
-from roster import CWRoster
 
 
 def open_and_close(file_name):
@@ -39,11 +37,10 @@ def make_game():
     cw_game_create.restype = POINTER(CWGame)
     cw_game_create.argtypes = (POINTER(c_char),)
     game_id = ctypes.create_string_buffer(b"ZZZ201908321")
-    gp = cw_game_create(game_id)
+    _ = cw_game_create(game_id)
 
 
 def main():
-    #    g = make_game()
     open_and_close(b"testfile.txt")
 
 

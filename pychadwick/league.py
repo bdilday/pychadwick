@@ -1,5 +1,4 @@
-import ctypes
-from ctypes import Structure, POINTER, c_char, c_char_p, c_int
+from ctypes import Structure, POINTER
 from .roster import CWRoster
 
 
