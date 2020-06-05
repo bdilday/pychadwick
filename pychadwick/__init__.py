@@ -1,4 +1,5 @@
 from pandas import Int32Dtype
+from pychadwicklib import ChadwickLibrary
 
 nullable_int = Int32Dtype()
 

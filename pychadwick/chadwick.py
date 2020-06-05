@@ -16,17 +16,15 @@ from .game import CWGame
 from .gameiter import CWGameIterator
 from .roster import CWRoster
 from .utils import CWEventFieldStruct
-from . import EVENT_DATA_TYPES
+from . import EVENT_DATA_TYPES, ChadwickLibrary
 
 
 class Chadwick:
     FIELDS_COUNT = 96
     EXT_FIELDS_COUNT = 63
 
-    def __init__(self, library_path="libchadwick2.so", *args, **kwargs):
-        self._dll = None
-        self.library_path = library_path
-        self._load_shared_library(library_path)
+    def __init__(self, *args, **kwargs):
+        self.libchadwick = ChadwickLibrary.libchadwick
         self.set_all_headers()
 
     def set_all_headers(self):
@@ -82,14 +80,7 @@ class Chadwick:
                 f"field_name {field_name} is not in the headers. value NOT set"
             )
 
-    @property
-    def libchadwick(self):
-        if self._dll is None:
-            self._load_shared_library(self.library_path)
-        return self._dll
 
-    def _load_shared_library(self, library_path):
-        self._dll = ctypes.cdll.LoadLibrary(library_path)
 
     def fopen(self, file_path, mode=b"r"):
         func = self.libchadwick.fopen
