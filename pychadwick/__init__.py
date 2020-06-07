@@ -1,5 +1,5 @@
 from pandas import Int32Dtype
-from .lib import ChadwickLibrary
+from pychadwick.lib import ChadwickLibrary
 
 __all__ = ["ChadwickLibrary"]
 
