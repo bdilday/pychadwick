@@ -1,0 +1,11 @@
+
+exclude scripts/*
+exclude .github/*
+exclude MANIFEST
+
+include CMakeLists.txt
+include README.md
+include CMakeLists.txt LICENSE README.md requirements.txt
+include setup.cfg tests Makefile MANIFEST.in
+include pyproject.toml requirements.txt requirements-dev.txt setup.py
+recursive-include src *

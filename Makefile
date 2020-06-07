@@ -14,6 +14,8 @@ clean:
 	rm -fr pychadwick.egg-info
 	rm -fr build
 	rm -fr dist
+	python setup.py clean
+	cd src && make clean
 
 dist: clean
 	python setup.py bdist_wheel
@@ -26,4 +28,4 @@ install-dev:
 	pip install --quiet -r requirements-dev.txt
 
 install: install-dev
-	pip install -e .
+	pip install .
