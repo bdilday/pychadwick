@@ -10,8 +10,8 @@ logging.basicConfig(level=logging.INFO)
 def update_text(text):
     boilerplate = (
         "/* This source code was modified by Ben Dilday on {}\n"
-        " * for inclusion on the pychadwicklib project\n"
-        " * https://github.com/bdilday/pychadwicklib\n"
+        " * for inclusion on the pychadwick project\n"
+        " * https://github.com/bdilday/pychadwick\n"
         " * The original is available at https://github.com/chadwickbureau/chadwick\n"
         "*/\n".format(timestamp)
     )
