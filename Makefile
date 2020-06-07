@@ -7,13 +7,15 @@ lint: install-dev
 	python -m flake8 pychadwick
 
 
-test: install-dev
-	python -m pytest tests/
+test: install
+	pytest tests/
 
 clean:
 	rm -fr pychadwick.egg-info
 	rm -fr build
 	rm -fr dist
+	rm -rf _skbuild
+	python setup.py clean
 
 dist: clean
 	python setup.py bdist_wheel
@@ -25,5 +27,7 @@ docs: install-dev
 install-dev:
 	pip install --quiet -r requirements-dev.txt
 
-install: install-dev
-	pip install -e .
+install: clean
+	pip install --quiet -r requirements-dev.txt
+	pip install --quiet -r requirements.txt
+	python setup.py install

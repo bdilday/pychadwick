@@ -8,9 +8,9 @@ from ctypes import (
     create_string_buffer,
 )
 
-from pychadwick.game import CWGame
-from pychadwick.roster import CWRoster
-from pychadwick.league import CWLeague
+from pychadwick import CWGame
+from pychadwick import CWRoster
+from pychadwick import CWLeague
 
 
 def read_rosters():
