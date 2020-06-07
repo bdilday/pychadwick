@@ -3,13 +3,23 @@ from pychadwick.chadwick import Chadwick
 
 
 @pytest.fixture
-def lib_path():
-    return (
-        "/home/bdilday/.venvs/pychadwick/lib/python3.7/"
-        "site-packages/pychadwick-0.1.0-py3.7-linux-x86_64.egg/"
-        "pychadwick/build/cwevent/libcwevent.so"
-    )
+def event_path():
+    # return (
+    #    b"https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/1982OAK.EVA"
+    # )
+    #    return "/tmp/retrosheet-master/event/regular/1982OAK.EVA"
+    return "/tmp/retrosheet-master/event/regular/1991BAL.EVA"
 
 
-def test_chadwick(lib_path):
-    chadwick = Chadwick(lib_path)
+def test_chadwick():
+    _ = Chadwick()
+
+
+def test_load_games(event_path):
+    chadwick = Chadwick()
+    games = chadwick.games(event_path)
+
+    game = next(games)
+    game_it = chadwick.process_game(game)
+    record = next(game_it)
+    assert "GAME_ID" in record.keys()

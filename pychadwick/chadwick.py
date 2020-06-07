@@ -103,14 +103,21 @@ class Chadwick:
         return func(gameiter_ptr)
 
     def games(self, file_path):
+        file_path = bytes(str(file_path), "utf8")
         cw_game_read = self.libchadwick.cw_game_read
         cw_game_read.restype = POINTER(CWGame)
         cw_game_read.argtypes = (ctypes.c_void_p,)
+        cw_file_find_first_game = self.libchadwick.cw_file_find_first_game
+        cw_file_find_first_game.restype = ctypes.c_int
+        cw_file_find_first_game.argtypes = (ctypes.c_void_p,)
+
         file_handle = self.fopen(file_path)
+
+        cw_file_find_first_game(file_handle)
         while not self.feof(file_handle):
             yield cw_game_read(file_handle)
 
-            # TODO: why is this here?
+            # TODO: why is this here? what's the exception?
             # except:
             #     self.fclose(file_handle)
             #     return
