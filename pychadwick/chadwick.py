@@ -7,6 +7,8 @@ from ctypes import (
     create_string_buffer,
 )
 import logging
+import requests
+import tempfile
 
 import pandas as pd
 
@@ -102,7 +104,15 @@ class Chadwick:
         func.argtypes = (POINTER(CWGameIterator),)
         return func(gameiter_ptr)
 
+
+    def _download_to_tempfile(self, url):
+        fh = tempfile.NamedTemporaryFile(delete=False)
+        fh.write(requests.get(url).content)
+        return fh.name
+
     def games(self, file_path):
+        if file_path.startswith("http"):
+            file_path = self._download_to_tempfile(file_path)
         file_path = bytes(str(file_path), "utf8")
         cw_game_read = self.libchadwick.cw_game_read
         cw_game_read.restype = POINTER(CWGame)
