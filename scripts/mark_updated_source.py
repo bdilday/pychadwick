@@ -15,7 +15,10 @@ def update_text(text):
         " * The original is available at https://github.com/chadwickbureau/chadwick\n"
         "*/\n".format(timestamp)
     )
-    return boilerplate + text
+
+    token = "source code was modified by Ben Dilday"
+    filtered_text = "/*".join(filter(lambda s: token not in s, text.split("/*")))
+    return boilerplate + filtered_text
 
 
 def update_file(file_path):

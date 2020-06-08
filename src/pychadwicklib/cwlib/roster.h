@@ -1,11 +1,6 @@
-/* This source code was modified by Ben Dilday on 2020-06-07
+/* This source code was modified by Ben Dilday on 2020-06-08
  * for inclusion on the pychadwick project
  * https://github.com/bdilday/pychadwick
- * The original is available at https://github.com/chadwickbureau/chadwick
-*/
-/* This source code was modified by Ben Dilday on 2020-06-05
- * for inclusion on the pychadwicklib project
- * https://github.com/bdilday/pychadwicklib
  * The original is available at https://github.com/chadwickbureau/chadwick
 */
 /*
