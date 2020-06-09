@@ -117,6 +117,7 @@ class Chadwick:
         cw_game_read = self.libchadwick.cw_game_read
         cw_game_read.restype = POINTER(CWGame)
         cw_game_read.argtypes = (ctypes.c_void_p,)
+
         cw_file_find_first_game = self.libchadwick.cw_file_find_first_game
         cw_file_find_first_game.restype = ctypes.c_int
         cw_file_find_first_game.argtypes = (ctypes.c_void_p,)
@@ -176,12 +177,17 @@ class Chadwick:
 
         event_str = create_string_buffer(b" ", 4096)
         while gameiter.contents.event:
+            print("PYTHON: about to process")
             cwevent_process_game_record(
                 gameiter, roster_visitor, roster_home, event_str
             )
+            print("PYTHON: about to gameiter")
+            print(gameiter.contents.game.contents.game_id)
             self.cw_gameiter_next(gameiter)
+            print("PYTHON: about to dictitize")
             if event_str.value:
                 yield self.dicticize_event_string(event_str.value)
+
 
     def cw_gameiter_create(self, game_ptr):
         func = self.libchadwick.cw_gameiter_create

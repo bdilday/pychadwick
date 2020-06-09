@@ -845,22 +845,38 @@ cw_gameiter_process_comments(CWGameIterator *gameiter)
 void 
 cw_gameiter_next(CWGameIterator *gameiter)
 {
+ // printf("event_text %s\n", gameiter->event->event_text);
+
+    printf("%i\n", gameiter);
+
+    // if event is null, just return.
+    // this happens when NP is the last event, ie a rain cancellation
+    if (!gameiter->event) {
+    return;
+    }
+    printf("%i\n", gameiter->event);
+
+
   if (strcmp(gameiter->event->event_text, "NP")) {
     cw_gamestate_update(gameiter->state, 
 			gameiter->event->batter, gameiter->event_data);
 
   }
 
+    printf("about to process comments.....................\n");
   cw_gameiter_process_comments(gameiter);
   cw_gameiter_process_subs(gameiter);
+ printf("done  process comments.....................\n");
 
   /* Now, move on to the next event, and parse it.
    * There are a few entries in the CWEventData that are context-dependent,
    * in the sense that they cannot fully be inferred from the 
    * event text alone.  The remaining code handles those cases.
    */
-  gameiter->event = gameiter->event->next;
+   printf("first event %s\n", gameiter->event->event_text);
+    gameiter->event = gameiter->event->next;
 
+    printf("here1\n");
   if (gameiter->event != NULL &&
       (gameiter->state->inning != gameiter->event->inning || 
        gameiter->state->batting_team != gameiter->event->batting_team)) {
@@ -881,9 +897,11 @@ cw_gameiter_next(CWGameIterator *gameiter)
     cw_gamestate_change_sides(gameiter->state, gameiter->event);
   }
 
+    printf("here2\n");
   if (gameiter->event && gameiter->event->ladj_slot != 0) {
     gameiter->state->next_batter[gameiter->state->batting_team] = gameiter->event->ladj_slot;
   }
+      printf("here3\n");
   if (gameiter->event && gameiter->event->itb_base != 0) {
     strcpy(gameiter->state->runners[gameiter->event->itb_base],
 	   gameiter->event->itb_runner_id);
@@ -893,6 +911,7 @@ cw_gameiter_next(CWGameIterator *gameiter)
 	    gameiter->state->fielders[2][1-gameiter->state->batting_team], 49);
     gameiter->state->num_itb_runners[gameiter->state->batting_team]++;
   }
+      printf("here4\n");
   if (gameiter->event && strcmp(gameiter->event->event_text, "NP")) {
     int i;
     gameiter->state->batter_hand = gameiter->event->batter_hand;
@@ -927,6 +946,7 @@ cw_gameiter_next(CWGameIterator *gameiter)
     }
 
   }
+      printf("here5\n");
 }
 
 /* Compute the eventual "fate" of the runner on 'base' */
