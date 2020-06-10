@@ -61,5 +61,6 @@ def test_game_to_csv(chadwick, team_events):
 
 
 def test_init_read_league(chadwick):
-    file_name = b"/tmp/retrosheet-master/event/regular/TEAM1982"
-    league = chadwick.cw_league_read(file_name)
+    url = "https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/TEAM1982"
+    file_path = get_event_path(url)
+    _ = chadwick.cw_league_read(bytes(file_path, "utf8"))
