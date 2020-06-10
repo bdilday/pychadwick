@@ -1,6 +1,7 @@
 import ctypes
 from ctypes import (
     POINTER,
+c_char_p,
     c_char,
     c_int,
     pointer,
@@ -12,6 +13,7 @@ import tempfile
 
 import pandas as pd
 
+from .league import CWLeague
 from .game import CWGame
 from .gameiter import CWGameIterator
 from .roster import CWRoster
@@ -104,7 +106,6 @@ class Chadwick:
         func.argtypes = (POINTER(CWGameIterator),)
         return func(gameiter_ptr)
 
-
     def _download_to_tempfile(self, url):
         fh = tempfile.NamedTemporaryFile(delete=False)
         fh.write(requests.get(url).content)
@@ -156,6 +157,35 @@ class Chadwick:
             for event_item in event_bytes.decode().split(",")
         ]
 
+    def cw_league_read(self, file_name):
+        cw_league_init_read_file = self.libchadwick.cw_league_init_read_file
+        cw_league_init_read_file.argtypes = (POINTER(CWLeague), c_char_p)
+        cw_league_init_read_file.restype = None
+        league = pointer(CWLeague())
+        cw_league_init_read_file(league, file_name)
+        return league
+
+    def read_rosters(self):
+        cwtools_read_rosters_inplace = self.libchadwick.cwtools_read_rosters_inplace
+        cwtools_read_rosters_inplace.argtypes = ()
+
+    def process_game_csv(self, game_ptr, roster_visitor=None, roster_home=None):
+        cwevent_process_game = self.libchadwick.cwevent_process_game
+        cwevent_process_game.argtypes = (
+            POINTER(CWLeague),
+            POINTER(CWRoster),
+            c_char_p,
+        )
+        cwevent_process_game.restype = None
+        league = pointer(CWLeague())
+        roster = pointer(CWRoster())
+
+        if not roster_home:
+            roster_home = pointer(CWRoster())
+
+        cwevent_process_game(game_ptr, roster_visitor, roster_home)
+
+
     def process_game(self, game_ptr, roster_visitor=None, roster_home=None):
         cwevent_process_game_record = self.libchadwick.cwevent_process_game_record
         cwevent_process_game_record.argtypes = (
@@ -177,17 +207,12 @@ class Chadwick:
 
         event_str = create_string_buffer(b" ", 4096)
         while gameiter.contents.event:
-            print("PYTHON: about to process")
             cwevent_process_game_record(
                 gameiter, roster_visitor, roster_home, event_str
             )
-            print("PYTHON: about to gameiter")
-            print(gameiter.contents.game.contents.game_id)
             self.cw_gameiter_next(gameiter)
-            print("PYTHON: about to dictitize")
             if event_str.value:
                 yield self.dicticize_event_string(event_str.value)
-
 
     def cw_gameiter_create(self, game_ptr):
         func = self.libchadwick.cw_gameiter_create

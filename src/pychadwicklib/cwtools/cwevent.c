@@ -1911,15 +1911,12 @@ void cwevent_process_game_record(
   int i, comma;
 
   CWEvent *event = gameiter->event;
-  printf("found event %s\n", event->event_text);
+//  printf("found event %s\n", event->event_text);
 
   if (!strcmp(event->event_text, "NP"))
   {
-    printf("advancing gamiter\n");
     cw_gameiter_next(gameiter);
-    printf("done advancing gameiter\n");
     strcpy(output_line, "");
-    printf("carry on\n");
     return;
   }
 
@@ -1958,8 +1955,8 @@ void cwevent_process_game_record(
     }
   };
 
-  printf("%s", output_line);
-  printf("\n");
+//  printf("%s", output_line);
+//  printf("\n");
   
 }
 
@@ -1973,8 +1970,8 @@ cwevent_process_game(CWGame *game, CWRoster *visitors, CWRoster *home)
 
   while (gameiter->event != NULL) {
     cwevent_process_game_record(gameiter, visitors, home, output_line);
-//    printf("%s", output_line);
-//    printf("\n");
+    printf("%s", output_line);
+    printf("\n");
     cw_gameiter_next(gameiter);
   }
 

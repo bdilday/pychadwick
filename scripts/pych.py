@@ -8,18 +8,16 @@ from ctypes import (
     create_string_buffer,
 )
 
-from pychadwick import CWGame
-from pychadwick import CWRoster
-from pychadwick import CWLeague
+from pychadwick.chadwick import Chadwick
+from pychadwick.game import CWGame
+from pychadwick.roster import CWRoster
+from pychadwick.league import CWLeague
 
 
 def read_rosters():
-    lib_path = (
-        "/home/bdilday/.venvs/pychadwick/lib/python3.7/"
-        "site-packages/pychadwick-0.1.0-py3.7-linux-x86_64.egg/"
-        "pychadwick/build/cwevent/libcwevent.so"
-    )
-    dll = ctypes.cdll.LoadLibrary(lib_path)
+    chadwick = Chadwick()
+    dll = chadwick.libchadwick
+
     filename = b"/home/bdilday/github/chadwickbureau/retrosheet/event/regular/TEAM1961"
     f = dll.cw_league_read_file
     f.argtypes = (POINTER(CWLeague), c_char_p)
@@ -42,12 +40,9 @@ def read_rosters():
 
 
 def make_game():
-    lib_path = (
-        "/home/bdilday/.venvs/pychadwick/lib/python3.7/"
-        "site-packages/pychadwick-0.1.0-py3.7-linux-x86_64.egg/"
-        "pychadwick/build/cwevent/libcwevent.so"
-    )
-    dll = ctypes.cdll.LoadLibrary(lib_path)
+    chadwick = Chadwick()
+    dll = chadwick.libchadwick
+
 
     cw_game_create = dll.cw_game_create
     cw_game_create.restype = POINTER(CWGame)
@@ -58,8 +53,8 @@ def make_game():
 
 
 def main():
-    #    p = read_rosters()
-    p = make_game()
+    p = read_rosters()
+    #p = make_game()
     print(p)
 
 

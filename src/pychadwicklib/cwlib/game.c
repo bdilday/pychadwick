@@ -717,27 +717,22 @@ cw_game_read(FILE *file)
   }
 
   tok = cw_strtok(buf);
-  printf("found token %s\n", tok);
 
   if (tok && !strcmp(tok, "id"))
   {
-    printf("*************** searching for game id\n");
 
     char *game_id = cw_strtok(NULL);
     if (game_id)
     {
-      printf("*************** found game_id %s\n", game_id);
       game = cw_game_create(game_id);
     }
     else
     {
-      printf("************** game id is false\n");
       return NULL;
     }
   }
   else
   {
-    printf("*********** token is false\n");
     return NULL;
   }
 
@@ -748,14 +743,12 @@ cw_game_read(FILE *file)
     {
       if (feof(file))
       {
-      printf("breaking because eof\n");
         break;
       }
       else
       {
         if (game)
         {
-        printf("cleaning and freeing game\n");
           cw_game_cleanup(game);
           free(game);
         }
@@ -764,12 +757,10 @@ cw_game_read(FILE *file)
     }
     if (feof(file))
     {
-      printf("breaking because eof2 \n");
       break;
     }
 
     tok = cw_strtok(buf);
-    printf("found INNER token %s\n", tok);
 
     if (!tok || !strcmp(tok, "id"))
     {
@@ -863,7 +854,6 @@ cw_game_read(FILE *file)
     }
     else if (!strcmp(tok, "sub"))
     {
-      printf("found sub!\n");
       char *player_id, *name, *team, *slot, *pos;
       player_id = cw_strtok(NULL);
       name = cw_strtok(NULL);
@@ -879,16 +869,11 @@ cw_game_read(FILE *file)
     }
     else if (!strcmp(tok, "com"))
     {
-      printf("found com!\n");
       char *comment;
-      printf("allocate com\n");
       comment = cw_strtok(NULL);
-      printf("read com\n");
       if (comment)
       {
-        printf("inside com\n");
         cw_game_comment_append(game, comment);
-        printf("appended com\n");
       }
     }
     else if (!strcmp(tok, "data"))
