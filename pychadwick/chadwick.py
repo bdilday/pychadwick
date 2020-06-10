@@ -1,7 +1,7 @@
 import ctypes
 from ctypes import (
     POINTER,
-c_char_p,
+    c_char_p,
     c_char,
     c_int,
     pointer,
@@ -165,26 +165,21 @@ class Chadwick:
         cw_league_init_read_file(league, file_name)
         return league
 
-    def read_rosters(self):
-        cwtools_read_rosters_inplace = self.libchadwick.cwtools_read_rosters_inplace
-        cwtools_read_rosters_inplace.argtypes = ()
-
     def process_game_csv(self, game_ptr, roster_visitor=None, roster_home=None):
         cwevent_process_game = self.libchadwick.cwevent_process_game
         cwevent_process_game.argtypes = (
-            POINTER(CWLeague),
+            POINTER(CWGame),
             POINTER(CWRoster),
-            c_char_p,
+            POINTER(CWRoster),
         )
         cwevent_process_game.restype = None
-        league = pointer(CWLeague())
-        roster = pointer(CWRoster())
 
         if not roster_home:
             roster_home = pointer(CWRoster())
+        if not roster_visitor:
+            roster_visitor = pointer(CWRoster())
 
         cwevent_process_game(game_ptr, roster_visitor, roster_home)
-
 
     def process_game(self, game_ptr, roster_visitor=None, roster_home=None):
         cwevent_process_game_record = self.libchadwick.cwevent_process_game_record
