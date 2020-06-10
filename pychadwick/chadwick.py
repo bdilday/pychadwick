@@ -1,6 +1,7 @@
 import ctypes
 from ctypes import (
     POINTER,
+    c_char_p,
     c_char,
     c_int,
     pointer,
@@ -12,6 +13,7 @@ import tempfile
 
 import pandas as pd
 
+from .league import CWLeague
 from .game import CWGame
 from .gameiter import CWGameIterator
 from .roster import CWRoster
@@ -104,7 +106,6 @@ class Chadwick:
         func.argtypes = (POINTER(CWGameIterator),)
         return func(gameiter_ptr)
 
-
     def _download_to_tempfile(self, url):
         fh = tempfile.NamedTemporaryFile(delete=False)
         fh.write(requests.get(url).content)
@@ -117,6 +118,7 @@ class Chadwick:
         cw_game_read = self.libchadwick.cw_game_read
         cw_game_read.restype = POINTER(CWGame)
         cw_game_read.argtypes = (ctypes.c_void_p,)
+
         cw_file_find_first_game = self.libchadwick.cw_file_find_first_game
         cw_file_find_first_game.restype = ctypes.c_int
         cw_file_find_first_game.argtypes = (ctypes.c_void_p,)
@@ -154,6 +156,30 @@ class Chadwick:
             event_item.replace(r'"', "")
             for event_item in event_bytes.decode().split(",")
         ]
+
+    def cw_league_read(self, file_name):
+        cw_league_init_read_file = self.libchadwick.cw_league_init_read_file
+        cw_league_init_read_file.argtypes = (POINTER(CWLeague), c_char_p)
+        cw_league_init_read_file.restype = None
+        league = pointer(CWLeague())
+        cw_league_init_read_file(league, file_name)
+        return league
+
+    def process_game_csv(self, game_ptr, roster_visitor=None, roster_home=None):
+        cwevent_process_game = self.libchadwick.cwevent_process_game
+        cwevent_process_game.argtypes = (
+            POINTER(CWGame),
+            POINTER(CWRoster),
+            POINTER(CWRoster),
+        )
+        cwevent_process_game.restype = None
+
+        if not roster_home:
+            roster_home = pointer(CWRoster())
+        if not roster_visitor:
+            roster_visitor = pointer(CWRoster())
+
+        cwevent_process_game(game_ptr, roster_visitor, roster_home)
 
     def process_game(self, game_ptr, roster_visitor=None, roster_home=None):
         cwevent_process_game_record = self.libchadwick.cwevent_process_game_record

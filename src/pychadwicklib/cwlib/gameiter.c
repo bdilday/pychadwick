@@ -845,22 +845,35 @@ cw_gameiter_process_comments(CWGameIterator *gameiter)
 void 
 cw_gameiter_next(CWGameIterator *gameiter)
 {
+
+    // if event is null, just return.
+    // this happens when NP is the last event, ie a rain cancellation
+    if (!gameiter->event) {
+    return;
+    }
+    //printf("%i\n", gameiter->event);
+
+
   if (strcmp(gameiter->event->event_text, "NP")) {
     cw_gamestate_update(gameiter->state, 
 			gameiter->event->batter, gameiter->event_data);
 
   }
 
+  //  printf("about to process comments.....................\n");
   cw_gameiter_process_comments(gameiter);
   cw_gameiter_process_subs(gameiter);
+// printf("done  process comments.....................\n");
 
   /* Now, move on to the next event, and parse it.
    * There are a few entries in the CWEventData that are context-dependent,
    * in the sense that they cannot fully be inferred from the 
    * event text alone.  The remaining code handles those cases.
    */
-  gameiter->event = gameiter->event->next;
+ //  printf("first event %s\n", gameiter->event->event_text);
+    gameiter->event = gameiter->event->next;
 
+//    printf("here1\n");
   if (gameiter->event != NULL &&
       (gameiter->state->inning != gameiter->event->inning || 
        gameiter->state->batting_team != gameiter->event->batting_team)) {

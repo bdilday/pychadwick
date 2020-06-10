@@ -155,6 +155,27 @@ cw_scorebook_remove_game(CWScorebook *scorebook, char *game_id)
 }
 
 static int
+cw_scorebook_strip_comments(FILE *file)
+{
+  while (1) {
+    char buf[256], *tok, *com;
+    if (fgets(buf, 256, file) == NULL) {
+      return 0;
+    }
+
+    tok = cw_strtok(buf);
+    com = cw_strtok(NULL);
+
+    if (tok && !strcmp(tok, "com") && com) {
+    // strip it b moving the FILE pointer past it
+    }
+    else {
+      return 1;
+    }
+  }
+}
+
+static int
 cw_scorebook_read_comments(CWScorebook *scorebook, FILE *file)
 {
   while (1) {

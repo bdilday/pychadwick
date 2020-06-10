@@ -1911,12 +1911,12 @@ void cwevent_process_game_record(
   int i, comma;
 
   CWEvent *event = gameiter->event;
+//  printf("found event %s\n", event->event_text);
 
   if (!strcmp(event->event_text, "NP"))
   {
     cw_gameiter_next(gameiter);
     strcpy(output_line, "");
-
     return;
   }
 
@@ -1936,7 +1936,7 @@ void cwevent_process_game_record(
         comma = 1;
       }
       buf += (*cwevent_field_data[i].f)(buf, gameiter, visitors, home);
-    }
+      }
   }
 
   for (i = 0; i <= max_ext_field; i++)
@@ -1970,8 +1970,8 @@ cwevent_process_game(CWGame *game, CWRoster *visitors, CWRoster *home)
 
   while (gameiter->event != NULL) {
     cwevent_process_game_record(gameiter, visitors, home, output_line);
-//    printf("%s", output_line);
-//    printf("\n");
+    printf("%s", output_line);
+    printf("\n");
     cw_gameiter_next(gameiter);
   }
 

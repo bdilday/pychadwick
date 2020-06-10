@@ -103,6 +103,45 @@ void set_game_id(char *s) {
 }
 
 void
+cwtools_read_rosters_inplace(CWLeague *league, CWRoster *roster, char *filename)
+{
+  FILE *teamfile;
+
+  teamfile = fopen(filename, "r");
+
+  if (teamfile == NULL) {
+    /* Also try lowercase version */
+    sprintf(filename, "team%s", year);
+
+    teamfile = fopen(filename, "r");
+
+    if (teamfile == NULL) {
+      fprintf(stderr, "Can't find teamfile (%s)\n", filename);
+      exit(1);
+    }
+  }
+
+  cw_league_read(league, teamfile);
+  fclose(teamfile);
+
+  for (roster = league->first_roster; roster; roster = roster->next) {
+    FILE *file;
+
+    sprintf(filename, "%s%s.ROS", roster->team_id, year);
+    file = fopen(filename, "r");
+
+    if (file == NULL) {
+      /* bevent silently ignores missing roster files and generates
+       * question marks for bats/throws for unknown players */
+      continue;
+    }
+
+    cw_roster_read(roster, file);
+    fclose(file);
+  }
+}
+
+void
 cwtools_read_rosters(CWLeague *league)
 {
   char filename[256];
