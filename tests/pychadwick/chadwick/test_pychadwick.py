@@ -47,7 +47,10 @@ def test_load_games_to_df(chadwick, team_events):
             f"https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/{team_event}"
         )
         games = chadwick.games(event_path)
-        dfs = [chadwick.game_to_dataframe(game) for game in games]
+        df = chadwick.games_to_dataframe(games)
+
+    games = chadwick.games(event_path)
+    df = chadwick.game_to_dataframe(next(games))
 
 
 def test_game_to_csv(chadwick, team_events):
