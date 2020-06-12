@@ -5,7 +5,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setup(
     name="pychadwick",
+<<<<<<< HEAD
     version="0.2.1",
+=======
+    version="0.2.2",
+>>>>>>> 698ce9e... bumps version
     author="Ben Dilday",
     author_email="ben.dilday.phd@gmail.com",
     description="Python bindings to the Chadwick library",
