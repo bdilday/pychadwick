@@ -13,12 +13,12 @@ import tempfile
 
 import pandas as pd
 
-from .league import CWLeague
-from .game import CWGame
-from .gameiter import CWGameIterator
-from .roster import CWRoster
-from .utils import CWEventFieldStruct
-from . import EVENT_DATA_TYPES, ChadwickLibrary
+from pychadwick.league import CWLeague
+from pychadwick.game import CWGame
+from pychadwick.gameiter import CWGameIterator
+from pychadwick.roster import CWRoster
+from pychadwick.utils import CWEventFieldStruct
+from pychadwick import EVENT_DATA_TYPES, ChadwickLibrary
 
 
 class Chadwick:
@@ -193,11 +193,11 @@ class Chadwick:
         gameiter = self.cw_gameiter_create(game_ptr)
 
         if not roster_visitor:
-            logging.warning("roster for %s is undefined.", "visitor")
+            logging.debug("roster for %s is undefined.", "visitor")
             roster_visitor = pointer(CWRoster())
 
         if not roster_home:
-            logging.warning("roster for %s is undefined.", "home")
+            logging.debug("roster for %s is undefined.", "home")
             roster_home = pointer(CWRoster())
 
         event_str = create_string_buffer(b" ", 4096)
@@ -229,6 +229,17 @@ class Chadwick:
                     raise TypeError
         return df
 
+    def games_to_dataframe(self, games, data_type_mapping=None):
+        if data_type_mapping is None:
+            data_type_mapping = EVENT_DATA_TYPES
+        dfs = [
+            pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8")
+            for game_ptr in games
+        ]
+        return self.convert_data_frame_types(
+            pd.concat(dfs, axis=0, ignore_index=True), data_type_mapping
+        )
+
     def game_to_dataframe(self, game_ptr, data_type_mapping=None):
         if data_type_mapping is None:
             data_type_mapping = EVENT_DATA_TYPES
@@ -236,6 +247,25 @@ class Chadwick:
             pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8"),
             data_type_mapping,
         )
+
+    def event_file_to_dataframe(self, event_file, data_type_mapping=None):
+        if data_type_mapping is None:
+            data_type_mapping = EVENT_DATA_TYPES
+        return self.games_to_dataframe(self.games(event_file), data_type_mapping)
+
+    def event_files_to_dataframe(self, event_files, data_type_mapping=None):
+        if data_type_mapping is None:
+            data_type_mapping = EVENT_DATA_TYPES
+        data = []
+        for event_file in event_files:
+            games = self.games(event_file)
+            for game in games:
+                data += list(self.process_game(game))
+        return self.convert_data_frame_types(
+            pd.DataFrame(data, dtype="f8"),
+            data_type_mapping,
+        )
+
 
     def register_function(self, func_name, func_arg_types, func_res_type):
         func = self.libchadwick.__getattr__(func_name)
