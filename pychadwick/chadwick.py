@@ -270,10 +270,8 @@ class Chadwick:
             for game in games:
                 data += list(self.process_game(game))
         return self.convert_data_frame_types(
-            pd.DataFrame(data, dtype="f8"),
-            data_type_mapping,
+            pd.DataFrame(data, dtype="f8"), data_type_mapping,
         )
-
 
     def register_function(self, func_name, func_arg_types, func_res_type):
         func = self.libchadwick.__getattr__(func_name)

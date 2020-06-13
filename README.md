@@ -20,6 +20,49 @@ $ pip install pychadwick
 
 ## Example use
 
+#### Python replacement for cwevent
+
+When you install `pychadwick`, it will install a 
+Python exe that mimic the `cwevent` exe from the 
+chadwick project. It reads a set of event files and 
+prints them out in csv format to `stdout`.
+
+
+This downloads a fresh copy of the retrosheet event files,
+and parses them with 7 CPUs
+
+```bash
+$ time pycwevent -n 7  > /tmp/events1.csv
+stderr: data_root not given as argument, downloading fresh copy of retrosheet events...
+stderr: found 2254 files
+Warning: Invalid integer value 'b'
+
+real	3m14.517s
+user	12m18.104s
+sys	0m25.264s
+
+$ wc -l /tmp/events1.csv 
+13976191 /tmp/events1.csv
+```
+
+This uses a pre-downloaded copy of the retrosheet event files,
+with 7 CPUs
+
+```bash
+$ time pycwevent -n 7 --data-root /tmp/retrosheet-master/event/regular/ > /tmp/events2.csv
+stderr: found 2254 files
+Warning: Invalid integer value 'b'
+
+real	1m57.499s
+user	9m52.236s
+sys	0m17.672s
+
+$ wc -l /tmp/events2.csv 
+13976184 /tmp/events2.csv
+```
+
+### Python interface to cwevent
+
 #### Load events
 
 Load events for a game from a file stored on the web

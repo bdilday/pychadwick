@@ -6,6 +6,7 @@ import requests
 
 from pychadwick.chadwick import Chadwick
 
+
 @pytest.fixture
 def chadwick():
     return Chadwick()
@@ -59,7 +60,6 @@ def test_load_games_to_df_missing_path(chadwick, team_events):
     games = chadwick.games(event_path)
     with pytest.raises(FileNotFoundError):
         _ = chadwick.games_to_dataframe(games)
-
 
 
 def test_game_to_csv(chadwick, team_events):

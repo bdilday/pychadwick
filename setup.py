@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setup(
     name="pychadwick",
-    version="0.2.3",
+    version="0.3.0",
     author="Ben Dilday",
     author_email="ben.dilday.phd@gmail.com",
     description="Python bindings to the Chadwick library",
@@ -21,4 +21,10 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools"],
+
+    entry_points={
+        "console_scripts": [
+            "pycwevent=pychadwick.cli.pycwevent:main"
+        ]
+    }
 )
