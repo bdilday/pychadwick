@@ -21,4 +21,10 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools"],
+
+    entry_points={
+        "console_scripts": [
+            "pycwevent=pychadwick.cli.pycwevent:main"
+        ]
+    }
 )
