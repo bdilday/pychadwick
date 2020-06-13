@@ -51,6 +51,10 @@ def read_from_file_csv(event_file):
 def main():
     args = _parse_args()
     if not args.data_root:
+        sys.stderr.write(
+            "stderr: data-root not given as argument, "
+            "downloading fresh copy of retrosheet events...\n"
+        )
         data_root = _download()
         events_dir = os.path.join(
             f"{data_root}", "retrosheet-master", "event", "regular"
