@@ -8,6 +8,7 @@ from ctypes import (
     create_string_buffer,
 )
 import logging
+import os
 import requests
 import tempfile
 
@@ -111,10 +112,17 @@ class Chadwick:
         fh.write(requests.get(url).content)
         return fh.name
 
+    @staticmethod
+    def _check_for_file(file_path):
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"cannot fond file {file_path}")
+
     def games(self, file_path):
         if file_path.startswith("http"):
             file_path = self._download_to_tempfile(file_path)
         file_path = bytes(str(file_path), "utf8")
+        self._check_for_file(file_path)
+
         cw_game_read = self.libchadwick.cw_game_read
         cw_game_read.restype = POINTER(CWGame)
         cw_game_read.argtypes = (ctypes.c_void_p,)

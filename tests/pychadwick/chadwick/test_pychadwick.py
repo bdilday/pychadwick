@@ -1,9 +1,10 @@
+import os
+from uuid import uuid4
 import pytest
-
-from pychadwick.chadwick import Chadwick
 import tempfile
 import requests
 
+from pychadwick.chadwick import Chadwick
 
 @pytest.fixture
 def chadwick():
@@ -51,6 +52,14 @@ def test_load_games_to_df(chadwick, team_events):
 
     games = chadwick.games(event_path)
     df = chadwick.game_to_dataframe(next(games))
+
+
+def test_load_games_to_df_missing_path(chadwick, team_events):
+    event_path = os.path.join(tempfile.gettempdir(), uuid4().hex)
+    games = chadwick.games(event_path)
+    with pytest.raises(FileNotFoundError):
+        _ = chadwick.games_to_dataframe(games)
+
 
 
 def test_game_to_csv(chadwick, team_events):
