@@ -1,4 +1,12 @@
-from skbuild import setup
+import subprocess
+import sys
+
+try:
+    from skbuild import setup
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "scikit-build"])
+    from skbuild import setup
+    
 from setuptools import find_packages
 
 with open("README.md", "r") as fh:
