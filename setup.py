@@ -1,11 +1,19 @@
-from skbuild import setup
+import subprocess
+import sys
+
+try:
+    from skbuild import setup
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "scikit-build"])
+    from skbuild import setup
+
 from setuptools import find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setup(
     name="pychadwick",
-    version="0.3.0",
+    version="0.3.1",
     author="Ben Dilday",
     author_email="ben.dilday.phd@gmail.com",
     description="Python bindings to the Chadwick library",
@@ -21,10 +29,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools"],
-
-    entry_points={
-        "console_scripts": [
-            "pycwevent=pychadwick.cli.pycwevent:main"
-        ]
-    }
+    entry_points={"console_scripts": ["pycwevent=pychadwick.cli.pycwevent:main"]},
 )
