@@ -6,7 +6,7 @@ try:
 except ModuleNotFoundError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "scikit-build"])
     from skbuild import setup
-    
+
 from setuptools import find_packages
 
 with open("README.md", "r") as fh:
@@ -29,10 +29,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools"],
-
-    entry_points={
-        "console_scripts": [
-            "pycwevent=pychadwick.cli.pycwevent:main"
-        ]
-    }
+    entry_points={"console_scripts": ["pycwevent=pychadwick.cli.pycwevent:main"]},
 )
