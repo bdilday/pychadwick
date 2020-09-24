@@ -35,7 +35,7 @@ def check_equality(pychadwick_df, cchadwick_df):
         df1 = pychadwick_df.query('GAME_ID == "{}"'.format(game_id))
         df2 = cchadwick_df.query('GAME_ID == "{}"'.format(game_id))
         try:
-            assert_frame_equal(df1, df2)
+            assert_frame_equal(df1, df2, check_dtype=False)
         except AssertionError:
             print(f"error: game {game_id} is not identical")
             num_errors += 1

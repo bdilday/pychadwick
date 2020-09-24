@@ -1915,7 +1915,8 @@ void cwevent_process_game_record(
 
   if (!strcmp(event->event_text, "NP"))
   {
-    cw_gameiter_next(gameiter);
+    fprintf(stderr, "WARNING: event text in cwevent_process_game_record == NP\n");
+    //cw_gameiter_next(gameiter);
     strcpy(output_line, "");
     return;
   }
@@ -1969,9 +1970,11 @@ cwevent_process_game(CWGame *game, CWRoster *visitors, CWRoster *home)
   CWGameIterator *gameiter = cw_gameiter_create(game);
 
   while (gameiter->event != NULL) {
-    cwevent_process_game_record(gameiter, visitors, home, output_line);
-    printf("%s", output_line);
-    printf("\n");
+    if (strcmp(gameiter->event->event_text, "NP")) {
+      cwevent_process_game_record(gameiter, visitors, home, output_line);
+      printf("%s", output_line);
+      printf("\n");
+    }
     cw_gameiter_next(gameiter);
   }
 
