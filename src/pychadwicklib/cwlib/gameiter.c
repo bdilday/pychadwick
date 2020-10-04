@@ -849,9 +849,8 @@ cw_gameiter_next(CWGameIterator *gameiter)
     // if event is null, just return.
     // this happens when NP is the last event, ie a rain cancellation
     if (!gameiter->event) {
-    return;
+      return;
     }
-    //printf("%i\n", gameiter->event);
 
 
   if (strcmp(gameiter->event->event_text, "NP")) {
@@ -870,9 +869,9 @@ cw_gameiter_next(CWGameIterator *gameiter)
    * in the sense that they cannot fully be inferred from the 
    * event text alone.  The remaining code handles those cases.
    */
- //  printf("first event %s\n", gameiter->event->event_text);
+   //printf("first event %s\n", gameiter->event->event_text);
     gameiter->event = gameiter->event->next;
-
+   
 //    printf("here1\n");
   if (gameiter->event != NULL &&
       (gameiter->state->inning != gameiter->event->inning || 

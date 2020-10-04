@@ -210,6 +210,10 @@ class Chadwick:
 
         event_str = create_string_buffer(b" ", 4096)
         while gameiter.contents.event:
+            if gameiter.contents.event.contents.event_text == b"NP":
+                logging.debug("event text == NP")
+                self.cw_gameiter_next(gameiter)
+                continue
             cwevent_process_game_record(
                 gameiter, roster_visitor, roster_home, event_str
             )
