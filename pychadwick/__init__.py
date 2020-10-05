@@ -2,7 +2,7 @@ from pandas import Int32Dtype
 from pychadwick.libutils import ChadwickLibrary
 
 
-_version = "0.3.3"
+_version = "0.4.0"
 
 __all__ = ["ChadwickLibrary"]
 
