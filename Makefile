@@ -18,7 +18,6 @@ clean:
 	python setup.py clean
 
 dist: clean
-	python setup.py bdist_wheel
 	python setup.py sdist
 
 docs: install-dev
