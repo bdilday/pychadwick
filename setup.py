@@ -28,6 +28,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
     ],
-    install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools"],
+    install_requires=["scikit-build", "ninja", "cmake", "wheel", "setuptools", "pandas>=1.0.4", "requests"],
     entry_points={"console_scripts": ["pycwevent=pychadwick.cli.pycwevent:main"]},
 )
