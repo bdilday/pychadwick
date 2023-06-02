@@ -244,21 +244,22 @@ class Chadwick:
     def games_to_dataframe(self, games, data_type_mapping=None):
         if data_type_mapping is None:
             data_type_mapping = EVENT_DATA_TYPES
-        dfs = [
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype=None)
-            for game_ptr in games
-        ]
+        try:
+            dfs = [
+                pd.DataFrame(list(self.process_game(game_ptr)), dtype=None)
+                for game_ptr in games
+            ]
+        except TypeError: # pandas < 2 compatibility
+            dfs = [
+                pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8")
+                for game_ptr in games
+            ]
         return self.convert_data_frame_types(
             pd.concat(dfs, axis=0, ignore_index=True), data_type_mapping
         )
 
     def game_to_dataframe(self, game_ptr, data_type_mapping=None):
-        if data_type_mapping is None:
-            data_type_mapping = EVENT_DATA_TYPES
-        return self.convert_data_frame_types(
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype=None),
-            data_type_mapping,
-        )
+        return self.games_to_dataframe([game_ptr], data_type_mapping=data_type_mapping)
 
     def event_file_to_dataframe(self, event_file, data_type_mapping=None):
         if data_type_mapping is None:
