@@ -245,7 +245,7 @@ class Chadwick:
         if data_type_mapping is None:
             data_type_mapping = EVENT_DATA_TYPES
         dfs = [
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8")
+            pd.DataFrame(list(self.process_game(game_ptr)), dtype=None)
             for game_ptr in games
         ]
         return self.convert_data_frame_types(
@@ -256,7 +256,7 @@ class Chadwick:
         if data_type_mapping is None:
             data_type_mapping = EVENT_DATA_TYPES
         return self.convert_data_frame_types(
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8"),
+            pd.DataFrame(list(self.process_game(game_ptr)), dtype=None),
             data_type_mapping,
         )
 
