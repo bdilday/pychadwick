@@ -3,6 +3,8 @@ import pathlib
 import sys
 
 FILE_EXTENSION = {"darwin": "dylib", "linux": "so", "windows": "dll"}
+
+
 class _ChadwickLibrary:
     library_path = (
         pathlib.Path(__file__).absolute().parent.parent

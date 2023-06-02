@@ -30,7 +30,6 @@ def test_chadwick():
 
 
 def test_load_games(chadwick, team_events):
-
     for team_event in team_events:
         event_path = get_event_path(
             f"https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/{team_event}"
@@ -43,7 +42,6 @@ def test_load_games(chadwick, team_events):
 
 
 def test_load_games_to_df(chadwick, team_events):
-
     for team_event in team_events:
         event_path = get_event_path(
             f"https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/{team_event}"
@@ -63,7 +61,6 @@ def test_load_games_to_df_missing_path(chadwick, team_events):
 
 
 def test_game_to_csv(chadwick, team_events):
-
     for team_event in team_events:
         event_path = get_event_path(
             f"https://raw.githubusercontent.com/chadwickbureau/retrosheet/master/event/regular/{team_event}"
