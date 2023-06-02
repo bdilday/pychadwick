@@ -21,6 +21,7 @@ from pychadwick.roster import CWRoster
 from pychadwick.utils import CWEventFieldStruct
 from pychadwick import EVENT_DATA_TYPES, ChadwickLibrary
 
+logger = logging.getLogger(__name__)
 
 class Chadwick:
     FIELDS_COUNT = 96
@@ -236,8 +237,8 @@ class Chadwick:
                         data_type_conversion
                     )
                 except TypeError:
-                    print(f"Cannot convert column {column_name}")
-                    print(df.loc[:column_name])
+                    logger.error(f"Cannot convert column {column_name} to data_type {data_type_conversion}")
+                    logger.error(df.loc[:, column_name].describe())
                     raise TypeError
         return df
 
