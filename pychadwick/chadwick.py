@@ -21,6 +21,8 @@ from pychadwick.roster import CWRoster
 from pychadwick.utils import CWEventFieldStruct
 from pychadwick import EVENT_DATA_TYPES, ChadwickLibrary
 
+logger = logging.getLogger(__name__)
+
 
 class Chadwick:
     FIELDS_COUNT = 96
@@ -228,37 +230,58 @@ class Chadwick:
         return func(game_ptr)
 
     @staticmethod
+    def _convert_int32(ser: pd.Series, data_type_conversion):
+        """
+        workaround for pandas < 2 where a string like "1" cannot be converted
+        directly to a Int32
+        """
+        try:
+            converted_values = ser.astype(data_type_conversion)
+        except TypeError:
+            converted_values = ser.astype(int).astype(data_type_conversion)
+
+        return converted_values
+
+    @staticmethod
     def convert_data_frame_types(df, data_type_mapping):
         for column_name, data_type_conversion in data_type_mapping.items():
             if column_name in df:
                 try:
-                    df.loc[:, column_name] = df.loc[:, column_name].astype(
-                        data_type_conversion
+                    converted_values = (
+                        Chadwick._convert_int32(
+                            df.loc[:, column_name], data_type_conversion
+                        )
+                        if str(data_type_conversion).startswith("Int")
+                        else df.loc[:, column_name].astype(data_type_conversion)
                     )
+                    df.loc[:, column_name] = converted_values
                 except TypeError:
-                    print(f"Cannot convert column {column_name}")
-                    print(df.loc[:column_name])
+                    logger.error(
+                        f"Cannot convert column {column_name} to data_type {data_type_conversion}"
+                    )
+                    logger.error(df.loc[:, column_name].describe())
                     raise TypeError
         return df
 
     def games_to_dataframe(self, games, data_type_mapping=None):
         if data_type_mapping is None:
             data_type_mapping = EVENT_DATA_TYPES
-        dfs = [
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8")
-            for game_ptr in games
-        ]
+        try:
+            dfs = [
+                pd.DataFrame(list(self.process_game(game_ptr)), dtype=None)
+                for game_ptr in games
+            ]
+        except TypeError:  # pandas < 2 compatibility
+            dfs = [
+                pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8")
+                for game_ptr in games
+            ]
         return self.convert_data_frame_types(
             pd.concat(dfs, axis=0, ignore_index=True), data_type_mapping
         )
 
     def game_to_dataframe(self, game_ptr, data_type_mapping=None):
-        if data_type_mapping is None:
-            data_type_mapping = EVENT_DATA_TYPES
-        return self.convert_data_frame_types(
-            pd.DataFrame(list(self.process_game(game_ptr)), dtype="f8"),
-            data_type_mapping,
-        )
+        return self.games_to_dataframe([game_ptr], data_type_mapping=data_type_mapping)
 
     def event_file_to_dataframe(self, event_file, data_type_mapping=None):
         if data_type_mapping is None:
@@ -274,7 +297,8 @@ class Chadwick:
             for game in games:
                 data += list(self.process_game(game))
         return self.convert_data_frame_types(
-            pd.DataFrame(data, dtype="f8"), data_type_mapping,
+            pd.DataFrame(data, dtype="f8"),
+            data_type_mapping,
         )
 
     def register_function(self, func_name, func_arg_types, func_res_type):
